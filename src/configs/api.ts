@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 import { APP_NAME, STORAGE_KEYS } from "./app";
 
-const APIURL = "https://assistance-sharing-app-16deacfd1740.herokuapp.com";
+const APIURL = "https://assistance-sharing-platform-48ae73229b11.herokuapp.com";
 
 const getToken = () => {
   if (typeof window !== "undefined") {
