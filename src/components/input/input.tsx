@@ -30,7 +30,6 @@ export const Input: React.FC<InputProps> = ({
   error,
   children,
   placeholder,
-  options = [],
   ...otherProps
 }) => {
   const { value, register } = otherProps;
@@ -46,14 +45,14 @@ export const Input: React.FC<InputProps> = ({
   const isPassword = type === "password";
   const isCheckbox = type === "checkbox";
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword] = useState(false);
 
   const inputStyle = ctl(`
         ${inputBaseStyle}
         ${isPassword ? "pr-10" : ""}
         ${
           error
-            ? "outline-red-200"
+            ? "outline-red-500"
             : `outline-grey ${isCheckbox ? "w-max cursor-pointer" : "focus:outline-primary"} hover:outline-grey-600`
         }
     `);
@@ -102,8 +101,4 @@ const inputContainerStyle = ctl(`
 
 const inputBaseStyle = ctl(`
   w-full px-4 py-2 rounded-[10px] outline outline-1 transition-all
-`);
-
-const postIconStyle = ctl(`
-  absolute top-0 right-4 h-full flex items-center justify-center
 `);

@@ -11,7 +11,7 @@ export const ErrorMessage = ({ error }: ErrorMessageProps) => {
       <Text
         value={error.message}
         variant="p3"
-        className="text-left ml-1 text-red-200"
+        className="text-left ml-1 text-red-500"
       />
     </div>
   );

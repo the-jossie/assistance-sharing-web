@@ -40,7 +40,7 @@ const Header = () => {
         <Link href="/">
           <Text
             value={APP_NAME}
-            className="font-black text-2xl italic text-primary bg-white py-1 px-3"
+            className="font-black text-2xl italic py-1 px-3"
           />
         </Link>
         <nav>
@@ -78,7 +78,7 @@ const Header = () => {
   );
 };
 
-const wrapperStyle = ctl(`bg-grey-300 z-10 shadow`);
+const wrapperStyle = ctl(`bg-grey-300 z-10 shadow bg-primary text-white`);
 const navStyle = ctl(
   `relative hidden md:flex items-center space-x-5 md:space-x-6 sticky top-0`,
 );
