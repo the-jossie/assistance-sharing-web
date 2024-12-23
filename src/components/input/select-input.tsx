@@ -21,9 +21,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   className,
   label = "",
   name = "",
-  type = "text",
   error,
-  children,
   placeholder,
   options = [],
   ...otherProps

@@ -21,7 +21,7 @@ const Text = ({
 }: TextProps) => {
   const firstLetterOfVariant = variant[0];
   const shouldRenderParagraphTag = firstLetterOfVariant === "p";
-  let textTag = (shouldRenderParagraphTag ? "p" : variant) as React.ElementType;
+  const textTag = (shouldRenderParagraphTag ? "p" : variant) as React.ElementType;
   const TextElement = tag ? tag : textTag;
 
   const textStyle = ctl(`

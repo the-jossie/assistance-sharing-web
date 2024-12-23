@@ -13,6 +13,7 @@ export const useStorage = () => {
 
         return JSON.parse(value);
       } catch (error) {
+        console.log({error})
         return "";
       }
     } else {
@@ -20,7 +21,7 @@ export const useStorage = () => {
     }
   };
 
-  const setItem = (key: string, value: any) => {
+  const setItem = (key: string, value: string | object) => {
     if (isBrowser()) {
       window["localStorage"].setItem(
         appendStorageIdToKey(key),
@@ -33,7 +34,7 @@ export const useStorage = () => {
     }
   };
 
-  const clearItem = (key: string) => {
+  const clearStorage = () => {
     if (isBrowser()) {
       window["localStorage"].clear();
 
@@ -54,7 +55,7 @@ export const useStorage = () => {
   };
 
   const clearAuth = () => {
-    return clearItem(STORAGE_KEYS.auth);
+    return clearStorage();
   };
 
   return { clearAuth, getAuth, saveAuth };
