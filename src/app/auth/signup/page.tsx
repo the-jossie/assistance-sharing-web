@@ -10,6 +10,7 @@ import { Button, Input, Text } from "@/components";
 import { signupApi } from "@/api";
 import { PAGE_ROUTES } from "@/configs";
 import { signupSchema } from "@/utils";
+import { SelectInput } from "@/components";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const SignupPage = () => {
 
       router.push(PAGE_ROUTES.LOGIN);
     } catch (error) {
-      console.log({error})
+      console.log({ error });
       toast.error("An error occured. Please try again!");
     }
   };
@@ -52,23 +53,57 @@ const SignupPage = () => {
         weight={400}
         className="text-center text-5xl"
       />
-      <Input
-        register={register("username")}
-        label="User name"
-        error={errors.username}
-      />
-      <Input
-        type="email"
-        register={register("email")}
-        label="Email"
-        error={errors.email}
-      />
-      <Input
-        type="password"
-        register={register("password")}
-        label="Password"
-        error={errors.password}
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          register={register("name")}
+          label="Full Name"
+          error={errors.name}
+        />
+        <Input
+          register={register("username")}
+          label="User name"
+          error={errors.username}
+        />
+        <Input
+          type="email"
+          register={register("email")}
+          label="Email"
+          error={errors.email}
+        />
+        <Input
+          register={register("phone")}
+          label="Phone"
+          error={errors.phone}
+        />
+
+        <Input
+          register={register("address")}
+          label="Address"
+          error={errors.address}
+        />
+
+        <SelectInput
+          register={register("skill")}
+          label="Skill"
+          error={errors.skill}
+          options={["Programming"]}
+        />
+
+        <SelectInput
+          register={register("experienceLevel")}
+          label="Experience Level"
+          error={errors.experienceLevel}
+          options={["BEGINNER", "INTERMEDIATE", "ADVANCED"]}
+        />
+
+        <Input
+          type="password"
+          register={register("password")}
+          label="Password"
+          error={errors.password}
+        />
+      </div>
+
       <div className="flex flex-col items-center justify-center space-y-4 mx-auto text-center !mt-10">
         <Button
           isLoading={isPending}
