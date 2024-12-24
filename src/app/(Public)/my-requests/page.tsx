@@ -1,25 +1,38 @@
 "use client";
 
-import { fetchMyRequests } from "@/api";
+import { fetchMyRequests, fetchRequestOffers } from "@/api";
 import { Button, Text } from "@/components";
 import { IRequest } from "@/types";
 import { capitalize } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateRequestModal } from "./create-request-modal";
 
 export default function MyRequests() {
-  const { data, isFetching, refetch } = useQuery({
+    const [modal, setModal] = useState({ isOpen: false });
+
+    const [sidebar, setSidebar] = useState<{
+      isOpen: boolean;
+      request: IRequest | null;
+    }>({ isOpen: false, request: null });
+
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["my-requests"],
     queryFn: fetchMyRequests,
   });
 
-  const [modal, setModal] = useState({ isOpen: false });
 
-  const [sidebar, setSidebar] = useState<{
-    isOpen: boolean;
-    request: IRequest | null;
-  }>({ isOpen: false, request: null });
+  const { data: offers, isFetching: isFetchingRequestOffers, refetch: refetchOffers } = useQuery({
+    queryKey: ["offers"],
+    queryFn: () => fetchRequestOffers({requestId: sidebar.request?.id}),
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (!sidebar.request) return;
+
+    refetchOffers();
+  }, [refetchOffers, sidebar.request])
 
   return (
     <div className="mt-4 overflow-hidden">
@@ -30,7 +43,7 @@ export default function MyRequests() {
         />
       </div>
       <div className="grid grid-cols-[1fr,2fr] gap-10 mt-4 overflow-hidden">
-        {isFetching ? (
+        {isLoading ? (
           <>Loading..</>
         ) : data && data.length > 0 ? (
           <ul className="border p-4 space-y-4 overflow-y-auto max-h-[87vh] h-max">
@@ -66,19 +79,19 @@ export default function MyRequests() {
               value={capitalize(sidebar.request.description)}
               variant="p2"
             />
-            <div className="!mt-20 space-y-4">
+            {!isFetchingRequestOffers && offers && offers.length > 0 && <div className="!mt-20 space-y-4">
               <Text
                 value="Offers Received"
                 variant="h4"
                 className="font-semibold"
               />
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="border p-3 flex items-center space-x-4">
+              <ul className="flex flex-wrap items-center gap-4">
+                {offers.map((offer, index) => <li className="border p-3 flex items-center space-x-4" key={index}>
                   <Text value="James Bond" />
                   <Button text="View" size="xsmall" />
-                </span>
-              </div>
-            </div>
+                </li>)}
+              </ul>
+            </div>}
           </div>
         )}
       </div>

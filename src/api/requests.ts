@@ -13,15 +13,6 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
-  export const sendOfferApi = async (body: {
-    requestId: number;
-  }) => {
-    const { data } = await axiosInstance.post("/api/offers", body);
-
-    return data;
-  };
-
-
   export const createRequestApi = async (body: {
     title: string;
     description: string;
@@ -31,3 +22,18 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
 
     return data;
   };
+
+  export const fetchRequestOffers = async ({requestId}: {requestId?: number}): Promise<IRequest[]> => {
+    const { data } = await axiosInstance.get(`/api/requests/${requestId}/offers`);
+
+    return data;
+  };
+
+  export const sendOfferApi = async (body: {
+    requestId: number;
+  }) => {
+    const { data } = await axiosInstance.post("/api/offers", body);
+
+    return data;
+  };
+
