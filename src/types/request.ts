@@ -1,23 +1,9 @@
 export interface IRequest {
-    associatedSkill
-    :
-    string;
-    description
-    :
-    string;
-    id
-    :
-    number;
-    status
-    :
-    | "PENDING";
-    title
-    :
-    string;
-    user
-    :
-    string
-    userId
-    :
-    number
+  associatedSkill: string;
+  description: string;
+  id: number;
+  status: "PENDING" | "OPEN";
+  title: string;
+  user: string;
+  userId: number;
 }

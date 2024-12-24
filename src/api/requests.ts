@@ -20,3 +20,14 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
 
     return data;
   };
+
+
+  export const createRequestApi = async (body: {
+    title: string;
+    description: string;
+    associatedSkill: string;
+  }) => {
+    const { data } = await axiosInstance.post("/api/requests", body);
+
+    return data;
+  };

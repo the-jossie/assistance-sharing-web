@@ -44,7 +44,7 @@ export default function Home() {
       {isFetching ? (
         <>Loading..</>
       ) : (
-        <ul className="border p-4 space-y-4 overflow-y-auto max-h-[90vh] h-max">
+        data && data.length > 0 ? <ul className="border p-4 space-y-4 overflow-y-auto max-h-[90vh] h-max">
           {data?.map((request, index) => (
             <li key={index}>
               <button
@@ -62,7 +62,7 @@ export default function Home() {
               </button>
             </li>
           ))}
-        </ul>
+        </ul> : <>Nothing here yet</>
       )}
       {modal.isOpen && modal.request && (
         <div className="border p-4 h-max space-y-6">

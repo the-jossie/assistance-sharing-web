@@ -52,3 +52,17 @@ export const signupSchema = yup.object().shape({
       "Password must contain at least one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long",
     ),
 });
+
+export const createRequestSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required("Kindly enter request title")
+    .min(3, "Title must be at least 3 characters long"),
+  description: yup
+    .string()
+    .required("Kindly enter request description")
+    .min(3, "Description must be at least 3 characters long"),
+    associatedSkill: yup
+    .string()
+    .required("Kindly select associated skill"),
+});
