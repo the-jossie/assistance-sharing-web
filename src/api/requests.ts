@@ -7,6 +7,12 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
+  export const fetchMyRequests = async (): Promise<IRequest[]> => {
+    const { data } = await axiosInstance.get("/api/my-requests");
+
+    return data;
+  };
+
   export const sendOfferApi = async (body: {
     requestId: number;
   }) => {

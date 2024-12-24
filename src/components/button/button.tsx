@@ -60,7 +60,7 @@ const buttonVariantStyle = {
   tertiary: `bg-black text-white border border-black hover:bg-white hover:text-black`,
 };
 const buttonSizeStyle = {
-  xsmall: `!p-2 rounded-md w-max !text-sm !font-normal`,
+  xsmall: `!p-1 rounded-md w-max !text-xs !font-normal`,
   small: `w-max py-2 px-4 !py-1 !px-4`,
   medium: `w-max text-sm font-thin`,
   large: `w-full md:w-72 md:px-10 md:!py-5`,
