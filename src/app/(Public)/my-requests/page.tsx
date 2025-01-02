@@ -2,29 +2,37 @@
 
 import { fetchMyRequests, fetchRequestOffers } from "@/api";
 import { Button, Text } from "@/components";
-import { IRequest } from "@/types";
+import { IRequest, IRequestOffer } from "@/types";
 import { capitalize } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CreateRequestModal } from "./create-request-modal";
+import { ViewOfferModal } from "./view-offer-modal";
 
 export default function MyRequests() {
-    const [modal, setModal] = useState({ isOpen: false });
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    type: string;
+    offer: IRequestOffer | null;
+  }>({ isOpen: false, type: "", offer: null });
 
-    const [sidebar, setSidebar] = useState<{
-      isOpen: boolean;
-      request: IRequest | null;
-    }>({ isOpen: false, request: null });
+  const [sidebar, setSidebar] = useState<{
+    isOpen: boolean;
+    request: IRequest | null;
+  }>({ isOpen: false, request: null });
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["my-requests"],
     queryFn: fetchMyRequests,
   });
 
-
-  const { data: offers, isFetching: isFetchingRequestOffers, refetch: refetchOffers } = useQuery({
+  const {
+    data: offers,
+    isFetching: isFetchingRequestOffers,
+    refetch: refetchOffers,
+  } = useQuery({
     queryKey: ["offers"],
-    queryFn: () => fetchRequestOffers({requestId: sidebar.request?.id}),
+    queryFn: () => fetchRequestOffers({ requestId: sidebar.request?.id }),
     enabled: false,
   });
 
@@ -32,14 +40,14 @@ export default function MyRequests() {
     if (!sidebar.request) return;
 
     refetchOffers();
-  }, [refetchOffers, sidebar.request])
+  }, [refetchOffers, sidebar.request]);
 
   return (
     <div className="mt-4 overflow-hidden">
       <div className="flex justify-end">
         <Button
           text="Create New Request"
-          onClick={() => setModal({ isOpen: true })}
+          onClick={() => setModal({ ...modal, isOpen: true, type: "create" })}
         />
       </div>
       <div className="grid grid-cols-[1fr,2fr] gap-10 mt-4 overflow-hidden">
@@ -79,31 +87,59 @@ export default function MyRequests() {
               value={capitalize(sidebar.request.description)}
               variant="p2"
             />
-            {!isFetchingRequestOffers && offers && offers.length > 0 && <div className="!mt-20 space-y-4">
-              <Text
-                value="Offers Received"
-                variant="h4"
-                className="font-semibold"
-              />
-              <ul className="flex flex-wrap items-center gap-4">
-                {offers.map((offer, index) => <li className="border p-3 flex items-center space-x-4" key={index}>
-                  <Text value="James Bond" />
-                  <Button text="View" size="xsmall" />
-                </li>)}
-              </ul>
-            </div>}
+            {!isFetchingRequestOffers && offers && offers.length > 0 && (
+              <div className="!mt-20 space-y-4">
+                <Text
+                  value="Offers Received"
+                  variant="h4"
+                  className="font-semibold"
+                />
+                <ul className="flex flex-wrap items-center gap-4">
+                  {offers.map((offer, index) => (
+                    <li
+                      className="border p-3 flex items-center space-x-4"
+                      key={index}
+                    >
+                      <Text value={capitalize(offer.username)} />
+                      <Button
+                        onClick={() =>
+                          setModal({ offer, isOpen: true, type: "viewOffer" })
+                        }
+                        text="View"
+                        size="xsmall"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {modal.isOpen && (
-        <CreateRequestModal
-          onClose={() => {
-            setModal({ ...modal, isOpen: false });
+        <>
+          {modal.type === "create" && (
+            <CreateRequestModal
+              onClose={() => {
+                setModal({ ...modal, isOpen: false });
 
-            refetch();
-          }}
-        />
+                refetch();
+              }}
+            />
+          )}
+
+          {modal.type === "viewOffer" && modal.offer && (
+            <ViewOfferModal
+              offer={modal.offer}
+              onClose={() => {
+                setModal({ ...modal, isOpen: false });
+
+                refetch();
+              }}
+            />
+          )}
+        </>
       )}
     </div>
   );

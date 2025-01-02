@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/configs";
-import { IRequest } from "@/types";
+import { IRequest, IRequestOffer } from "@/types";
 
 export const fetchRequests = async (): Promise<IRequest[]> => {
     const { data } = await axiosInstance.get("/api/requests");
@@ -23,7 +23,7 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
-  export const fetchRequestOffers = async ({requestId}: {requestId?: number}): Promise<IRequest[]> => {
+  export const fetchRequestOffers = async ({requestId}: {requestId?: number}): Promise<IRequestOffer[]> => {
     const { data } = await axiosInstance.get(`/api/requests/${requestId}/offers`);
 
     return data;
@@ -37,3 +37,11 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
+  export const acceptOfferApi = async ({requestId, offerId}: {
+    requestId: number;
+    offerId: number;
+  }) => {
+    const { data } = await axiosInstance.put(`/api/requests/${requestId}/offers/${offerId}/approve`);
+
+    return data;
+  };
