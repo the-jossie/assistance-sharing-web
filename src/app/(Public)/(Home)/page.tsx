@@ -9,7 +9,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
-  const [modal, setModal] = useState<{
+  const [detailsPane, setDetailsPane] = useState<{
     isOpen: boolean;
     request: IRequest | null;
   }>({ isOpen: false, request: null });
@@ -24,15 +24,15 @@ export default function Home() {
     onSuccess() {
       toast.success("Offer sent successfully!");
 
-      setModal({ request: null, isOpen: false });
+      setDetailsPane({ request: null, isOpen: false });
     },
   });
 
   const handleSendOffer = async () => {
-    if (!modal.request) return;
+    if (!detailsPane.request) return;
 
     try {
-      await mutateAsync({ requestId: modal.request?.id });
+      await mutateAsync({ requestId: detailsPane.request?.id });
     } catch (error) {
       console.log({ error });
       toast.error("An error occured. Please try again!");
@@ -48,7 +48,7 @@ export default function Home() {
           {data?.map((request, index) => (
             <li key={index}>
               <button
-                onClick={() => setModal({ request, isOpen: true })}
+                onClick={() => setDetailsPane({ request, isOpen: true })}
                 className="w-full h-full text-left border p-2 flex justify-between items-center"
               >
                 <div className="space-y-2 flex-grow">
@@ -64,11 +64,11 @@ export default function Home() {
           ))}
         </ul> : <>Nothing here yet</>
       )}
-      {modal.isOpen && modal.request && (
+      { detailsPane.isOpen && detailsPane.request ? (
         <div className="border p-4 h-max space-y-6">
-          <Text value={capitalize(modal.request.title)} variant="h2" />
-          <Text value={capitalize(modal.request.associatedSkill)} variant="p" />
-          <Text value={capitalize(modal.request.description)} variant="p2" />
+          <Text value={capitalize(detailsPane.request.title)} variant="h2" />
+          <Text value={capitalize(detailsPane.request.associatedSkill)} variant="p" />
+          <Text value={capitalize(detailsPane.request.description)} variant="p2" />
           <div className="!mt-20 flex justify-end">
             <Button
               text="Assist"
@@ -79,7 +79,7 @@ export default function Home() {
             />
           </div>
         </div>
-      )}
+      ) : <div className="flex items-center justify-center">{!isFetching &&<Text value="Select a request to the left to view details" />}</div>}
     </div>
   );
 }
