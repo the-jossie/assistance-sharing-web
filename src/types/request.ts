@@ -2,7 +2,7 @@ export interface IRequest {
   associatedSkill: string;
   description: string;
   id: number;
-  status: "PENDING" | "OPEN";
+  status: "PENDING" | "OPEN" | "INPROGRESS" | "COMPLETED";
   title: string;
   user: string;
   userId: number;

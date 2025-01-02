@@ -1,13 +1,18 @@
 "use client";
 
-import { fetchMyRequests, fetchRequestOffers } from "@/api";
+import {
+  fetchMyRequests,
+  fetchRequestOffers,
+  markRequestCompleteApi,
+} from "@/api";
 import { Button, Text } from "@/components";
 import { IRequest, IRequestOffer } from "@/types";
 import { capitalize } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CreateRequestModal } from "./create-request-modal";
 import { ViewOfferModal } from "./view-offer-modal";
+import { toast } from "react-toastify";
 
 export default function MyRequests() {
   const [modal, setModal] = useState<{
@@ -35,6 +40,20 @@ export default function MyRequests() {
     queryFn: () => fetchRequestOffers({ requestId: sidebar.request?.id }),
     enabled: false,
   });
+
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: markRequestCompleteApi,
+    onSuccess(response) {
+      toast.success(response ?? "Completed!");
+    },
+    onError() {
+      toast.error("An error occured. Please try again!");
+    },
+  });
+
+  const handleMarkRequestComplete = async () => {
+    await mutateAsync({ requestId: sidebar.request?.id });
+  };
 
   useEffect(() => {
     if (!sidebar.request) return;
@@ -87,32 +106,51 @@ export default function MyRequests() {
               value={capitalize(sidebar.request.description)}
               variant="p2"
             />
-            {!isFetchingRequestOffers && offers && offers.length > 0 && (
-              <div className="!mt-20 space-y-4">
+            {sidebar.request.status !== "COMPLETED" &&
+              !isFetchingRequestOffers &&
+              offers &&
+              offers.length > 0 && (
+                <div className="!mt-20 space-y-4">
+                  <Text
+                    value="Offers Received"
+                    variant="h4"
+                    className="font-semibold"
+                  />
+                  <ul className="flex flex-wrap items-center gap-4">
+                    {offers.map((offer, index) => (
+                      <li
+                        className="border p-3 flex items-center space-x-4"
+                        key={index}
+                      >
+                        <Text value={capitalize(offer.username)} />
+                        <Button
+                          onClick={() =>
+                            setModal({ offer, isOpen: true, type: "viewOffer" })
+                          }
+                          text="View"
+                          size="xsmall"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+            <div className="flex justify-end ml-auto">
+              {sidebar.request.status === "COMPLETED" ? (
                 <Text
-                  value="Offers Received"
-                  variant="h4"
-                  className="font-semibold"
+                  value="Completed"
+                  className="!ml-auto text-green-500 font-bold"
                 />
-                <ul className="flex flex-wrap items-center gap-4">
-                  {offers.map((offer, index) => (
-                    <li
-                      className="border p-3 flex items-center space-x-4"
-                      key={index}
-                    >
-                      <Text value={capitalize(offer.username)} />
-                      <Button
-                        onClick={() =>
-                          setModal({ offer, isOpen: true, type: "viewOffer" })
-                        }
-                        text="View"
-                        size="xsmall"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              ) : sidebar.request.status === "INPROGRESS" ? (
+                <Button
+                  isLoading={isPending}
+                  onClick={handleMarkRequestComplete}
+                  text="Mark Complete"
+                  className="ml-auto"
+                />
+              ) : <></>}
+            </div>
           </div>
         )}
       </div>

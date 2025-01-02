@@ -45,3 +45,11 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
 
     return data;
   };
+
+  export const markRequestCompleteApi = async ({requestId}: {
+    requestId?: number;
+  }) => {
+    const { data } = await axiosInstance.put(`/api/requests/${requestId}/complete`);
+
+    return data;
+  };
