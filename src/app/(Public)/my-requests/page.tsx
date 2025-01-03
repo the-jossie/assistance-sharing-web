@@ -13,8 +13,14 @@ import { useEffect, useState } from "react";
 import { CreateRequestModal } from "./create-request-modal";
 import { ViewOfferModal } from "./view-offer-modal";
 import { toast } from "react-toastify";
+import { useAuthContext } from "@/contexts";
+import { useRouter } from "next/navigation";
+import { PAGE_ROUTES } from "@/configs";
 
 export default function MyRequests() {
+  const { auth } = useAuthContext();
+  const router = useRouter();
+
   const [modal, setModal] = useState<{
     isOpen: boolean;
     type: string;
@@ -60,6 +66,12 @@ export default function MyRequests() {
 
     refetchOffers();
   }, [refetchOffers, sidebar.request]);
+
+  useEffect(() => {
+    if (!auth.token) {
+      return router.replace(PAGE_ROUTES.HOME);
+    }
+  }, [auth, router]);
 
   return (
     <div className="mt-4 overflow-hidden">
