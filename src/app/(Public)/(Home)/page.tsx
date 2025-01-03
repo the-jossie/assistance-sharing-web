@@ -2,15 +2,18 @@
 
 import { fetchRequests, sendOfferApi } from "@/api";
 import { Button, Text } from "@/components";
+import { PAGE_ROUTES } from "@/configs";
 import { useAuthContext } from "@/contexts";
 import { IRequest } from "@/types";
 import { capitalize } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
     const { auth } = useAuthContext();
+  const router = useRouter();
 
   const isLoggedIn = !!auth.token;
 
@@ -75,13 +78,13 @@ export default function Home() {
           <Text value={capitalize(detailsPane.request.associatedSkill)} variant="p3" className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded-full w-max"  />
           <Text value={capitalize(detailsPane.request.description)} variant="p2" />
           <div className="!mt-20 flex justify-end">
-            {isLoggedIn && <Button
+            {isLoggedIn ? <Button
               text="Assist"
               size="small"
               type="button"
               onClick={handleSendOffer}
               isLoading={isSendingOffer}
-            />}
+            /> : <button onClick={() => router.push(PAGE_ROUTES.LOGIN)}><Text value="Login to assist" className="underline" /></button>}
           </div>
         </div>
       ) : <div className="flex items-center justify-center">{!isFetching &&<Text value="Select a request to the left to view details" />}</div>}

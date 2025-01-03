@@ -69,7 +69,7 @@ export default function MyRequests() {
 
   useEffect(() => {
     if (!auth.token) {
-      return router.replace(PAGE_ROUTES.HOME);
+      return router.replace(PAGE_ROUTES.LOGIN);
     }
   }, [auth, router]);
 
