@@ -29,6 +29,22 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
+  export const approveRequestApi = async ({requestId}: {
+    requestId: number;
+  }) => {
+    const { data } = await axiosInstance.put(`/admin/api/requests/${requestId}/approve`);
+
+    return data;
+  };
+
+  export const rejectRequestApi = async ({requestId}: {
+    requestId: number;
+  }) => {
+    const { data } = await axiosInstance.put(`/admin/api/requests/${requestId}/reject`);
+
+    return data;
+  };
+
   export const sendOfferApi = async (body: {
     requestId: number;
   }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchRequests, sendOfferApi } from "@/api";
+import { approveRequestApi, fetchRequests, rejectRequestApi, sendOfferApi } from "@/api";
 import { Button, Text } from "@/components";
 import { PAGE_ROUTES } from "@/configs";
 import { useAuthContext } from "@/contexts";
@@ -16,6 +16,7 @@ export default function Home() {
   const router = useRouter();
 
   const isLoggedIn = !!auth.token;
+  const isAdmin = auth.role === "ROLE_ADMIN"
 
   const [detailsPane, setDetailsPane] = useState<{
     isOpen: boolean;
@@ -47,6 +48,45 @@ export default function Home() {
     }
   };
 
+  const { isPending: isApprovingRequest, mutateAsync: approveRequestMutation } = useMutation({
+    mutationFn: approveRequestApi,
+    onSuccess() {
+      toast.success("Request approved successfully!");
+
+      setDetailsPane({ request: null, isOpen: false });
+    },
+  });
+
+  const handleApproveRequest = async () => {
+    if (!detailsPane.request) return;
+
+    try {
+      await approveRequestMutation({ requestId: detailsPane.request?.id });
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occured. Please try again!");
+    }
+  };
+
+  const { isPending: isRejectingRequest, mutateAsync: rejectRequestMutation } = useMutation({
+    mutationFn: rejectRequestApi,
+    onSuccess() {
+      toast.success("Request rejected successfully!");
+
+      setDetailsPane({ request: null, isOpen: false });
+    },
+  });
+
+  const handleRejectRequest = async () => {
+    if (!detailsPane.request) return;
+
+    try {
+      await rejectRequestMutation({ requestId: detailsPane.request?.id });
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occured. Please try again!");
+    }
+  };
   return (
     <div className="grid grid-cols-[1fr,2fr] gap-10 mt-10 overflow-hidden">
       {isFetching ? (
@@ -77,8 +117,25 @@ export default function Home() {
           <Text value={capitalize(detailsPane.request.title)} variant="h2" />
           <Text value={capitalize(detailsPane.request.associatedSkill)} variant="p3" className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded-full w-max"  />
           <Text value={capitalize(detailsPane.request.description)} variant="p2" />
-          <div className="!mt-20 flex justify-end">
-            {isLoggedIn ? <Button
+          <div className="!mt-20 flex space-x-4 items-center justify-end">
+            {isLoggedIn && isAdmin ? <>
+            <Button
+              text="Approve"
+              size="small"
+              type="button"
+              onClick={handleApproveRequest}
+              isLoading={isApprovingRequest}
+            />
+            <Button
+              text="Reject"
+              size="small"
+              type="button"
+              variant="secondary"
+              onClick={handleRejectRequest}
+              isLoading={isRejectingRequest}
+            />
+            </>
+             : isLoggedIn ? <Button
               text="Assist"
               size="small"
               type="button"
