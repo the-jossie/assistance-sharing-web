@@ -13,6 +13,12 @@ export const fetchRequests = async (): Promise<IRequest[]> => {
     return data;
   };
 
+  export const fetchPendingRequests = async (): Promise<IRequest[]> => {
+    const { data } = await axiosInstance.get("/admin/api/requests");
+
+    return data;
+  };
+
   export const createRequestApi = async (body: {
     title: string;
     description: string;

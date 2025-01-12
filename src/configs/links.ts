@@ -18,6 +18,11 @@ export const NAV_LINKS: INavLink[] = [
     visibility: "exclusive",
   },
   {
+    name: "Pending Requests",
+    url: PAGE_ROUTES.PENDING_REQUESTS,
+    visibility: "protected",
+  },
+  {
     name: "Login",
     url: PAGE_ROUTES.LOGIN,
     visibility: "unauthenticated",

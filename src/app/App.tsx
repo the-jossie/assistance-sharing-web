@@ -10,9 +10,9 @@ import "react-toastify/dist/ReactToastify.css";
 const App = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
-          <AuthProvider>{children}</AuthProvider>
-          <ToastContainer />
-          </QueryClientProvider>
+      <AuthProvider>{children}</AuthProvider>
+      <ToastContainer />
+    </QueryClientProvider>
   );
 };
 
