@@ -18,7 +18,7 @@ export  const computeNavLinksToShow = (auth: { token?: string; role?: string }):
     if (userType === "admin") {
       return ["protected", "authenticated", "public"].includes(link.visibility);
     } else if (userType === "loggedInUser") {
-      return ["authenticated", "public"].includes(link.visibility);
+      return ["authenticated", "public", "exclusive"].includes(link.visibility);
     } else if (userType === "guest") {
       return ["public", "unauthenticated"].includes(link.visibility);
     }

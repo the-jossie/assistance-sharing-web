@@ -3,7 +3,7 @@ import { PAGE_ROUTES } from './routes';
 export interface INavLink {
   name: string;
   url: string;
-  visibility: "protected" | "authenticated" | "public" | "unauthenticated"
+  visibility: "protected" | "authenticated" | "public" | "unauthenticated" | "exclusive";
 }
 
 export const NAV_LINKS: INavLink[] = [
@@ -15,7 +15,7 @@ export const NAV_LINKS: INavLink[] = [
   {
     name: "My Requests",
     url: PAGE_ROUTES.MY_REQUESTS,
-    visibility: "authenticated",
+    visibility: "exclusive",
   },
   {
     name: "Login",
